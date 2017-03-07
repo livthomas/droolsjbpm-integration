@@ -53,7 +53,7 @@ public class TestConfig {
 
     public Properties loadProperties() throws Exception {
         properties = new Properties();
-        
+
         projectName = System.getProperty("projectName");
         if (projectName == null || projectName.isEmpty()) {
             projectName = "Project";
@@ -132,7 +132,22 @@ public class TestConfig {
             properties.put("perfRepo.password", perfRepoPassword);
         }
 
+        addCustomTags();
+
         return properties;
+    }
+
+    private void addCustomTags() {
+        String customTags = System.getProperty("customTags");
+        if (customTags != null && !customTags.isEmpty()) {
+            String[] splitTags = customTags.split(",");
+            for (String tag : splitTags) {
+                tag = tag.trim();
+                if (!tag.isEmpty()) {
+                    tags.add(tag);
+                }
+            }
+        }
     }
 
     public static TestConfig getInstance() {
@@ -156,7 +171,7 @@ public class TestConfig {
     public Properties getProperties() {
         return properties;
     }
-    
+
     public String getProjectName() {
         return projectName;
     }
@@ -238,15 +253,22 @@ public class TestConfig {
     }
 
     public static enum ReporterType {
-        CONSOLE, CSV, CSVSINGLE, PERFREPO
+        CONSOLE,
+        CSV,
+        CSVSINGLE,
+        PERFREPO
     }
 
     public static enum Measure {
-        MEMORYUSAGE, FILEDESCRIPTORS, THREADSTATES, CPUUSAGE
+        MEMORYUSAGE,
+        FILEDESCRIPTORS,
+        THREADSTATES,
+        CPUUSAGE
     }
 
     public static enum RunType {
-        DURATION(Duration.class), ITERATION(Iteration.class);
+        DURATION(Duration.class),
+        ITERATION(Iteration.class);
 
         private Class<? extends IRunType> klass;
 
@@ -264,5 +286,4 @@ public class TestConfig {
             return instance;
         }
     }
-
 }
